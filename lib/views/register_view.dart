@@ -1,7 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:my_notes/utilites/error_dialog.dart';
 
 import '../firebase_options.dart';
 
@@ -54,24 +57,56 @@ class _RegisterViewState extends State<RegisterView> {
           ),
           TextButton(
             onPressed: () async {
-              await Firebase.initializeApp(
-                options: DefaultFirebaseOptions.currentPlatform,
-              );
-              final email = _email.text;
-              final password = _password.text;
-              await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                email: email,
-                password: password,
-              );
+              try {
+                await Firebase.initializeApp(
+                  options: DefaultFirebaseOptions.currentPlatform,
+                );
+                final email = _email.text;
+                final password = _password.text;
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text("Success"),
+                      content: const Text("Please login to continue"),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  '/login/', (route) => false);
+                            },
+                            child: const Text("OK"))
+                      ],
+                    );
+                  },
+                );
+              } on FirebaseAuthException catch (e) {
+                await showErrorDialog(
+                  context,
+                  "Failed: ${e.code.replaceAll('-', ' ')}",
+                );
+              } catch (e) {
+                await showErrorDialog(
+                  context,
+                  "Failed: ${e.toString}",
+                );
+              }
             },
             child: const Text("Register"),
           ),
           TextButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/login/', (route) => false);
-              },
-              child: const Text('Already have an account? Login here'))
+            onPressed: () {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                '/login/',
+                (route) => false,
+              );
+            },
+            child: const Text('Already have an account? Login here'),
+          )
         ],
       ),
     );

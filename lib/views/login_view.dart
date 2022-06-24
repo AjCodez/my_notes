@@ -83,13 +83,13 @@ class _LoginViewState extends State<LoginView> {
                 } else {
                   await showErrorDialog(
                     context,
-                    "Some error occured: ${e.code}",
+                    "Failed: ${e.code}",
                   );
                 }
               } catch (e) {
                 await showErrorDialog(
                   context,
-                  "Some error occured: ${e.toString}",
+                  "Failed: ${e.toString}",
                 );
               }
             },
