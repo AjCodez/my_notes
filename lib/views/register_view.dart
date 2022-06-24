@@ -67,6 +67,7 @@ class _RegisterViewState extends State<RegisterView> {
                   email: email,
                   password: password,
                 );
+                await FirebaseAuth.instance.signOut();
                 showDialog(
                   context: context,
                   builder: (context) {
