@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -68,8 +70,16 @@ class _LoginViewState extends State<LoginView> {
                     .pushNamedAndRemoveUntil('/home/', (route) => false);
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'user-not-found') {
-                  const Text("Please register to Continue");
-                } else if (e.code == 'wrong-password') {}
+                  await showErrorDialogue(
+                    context,
+                    "User not found",
+                  );
+                } else if (e.code == 'wrong-password') {
+                  await showErrorDialogue(
+                    context,
+                    "Wrong password",
+                  );
+                }
               }
             },
             child: const Text("Login"),
