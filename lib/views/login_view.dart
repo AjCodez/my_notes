@@ -69,7 +69,7 @@ class _LoginViewState extends State<LoginView> {
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'user-not-found') {
                   const Text("Please register to Continue");
-                }
+                } else if (e.code == 'wrong-password') {}
               }
             },
             child: const Text("Login"),
@@ -86,4 +86,26 @@ class _LoginViewState extends State<LoginView> {
       ),
     );
   }
+}
+
+Future<void> showErrorDialogue(
+  BuildContext context,
+  String text,
+) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text("Failed"),
+        content: Text(text),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"))
+        ],
+      );
+    },
+  );
 }
