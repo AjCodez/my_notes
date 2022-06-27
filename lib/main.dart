@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_notes/utilites/routes.dart';
 import 'package:my_notes/views/home_page.dart';
 import 'package:my_notes/views/login_view.dart';
 import 'package:my_notes/views/register_view.dart';
@@ -9,9 +10,9 @@ void main() {
       debugShowCheckedModeBanner: false,
       home: const HomePage(),
       routes: {
-        '/login/': (context) => const LoginView(),
-        '/register/': (context) => const RegisterView(),
-        '/home/': (context) => const HomePage()
+        login: (context) => const LoginView(),
+        register: (context) => const RegisterView(),
+        home: (context) => const HomePage()
       },
     ),
   );

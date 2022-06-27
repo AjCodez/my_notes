@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:my_notes/utilites/routes.dart';
 
 import '../firebase_options.dart';
 import '../utilites/error_dialog.dart';
@@ -68,7 +69,7 @@ class _LoginViewState extends State<LoginView> {
                   password: password,
                 );
                 Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/home/', (route) => false);
+                    .pushNamedAndRemoveUntil(home, (route) => false);
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'user-not-found') {
                   await showErrorDialog(
@@ -98,7 +99,7 @@ class _LoginViewState extends State<LoginView> {
           TextButton(
               onPressed: () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/register/',
+                  register,
                   (route) => false,
                 );
               },
