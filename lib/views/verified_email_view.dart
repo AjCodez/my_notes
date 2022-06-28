@@ -19,7 +19,8 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
       appBar: AppBar(title: const Text('Verify your email')),
       body: Column(
         children: [
-          const Text("Please verify your email"),
+          const Text(
+              "Click here to verify your email! Please check your spam folder of mail to get verification link."),
           TextButton(
               onPressed: () async {
                 await Firebase.initializeApp(
