@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:my_notes/utilites/error_dialog.dart';
 import 'package:my_notes/utilites/routes.dart';
 import 'package:my_notes/utilites/success_dialog.dart';
 
@@ -27,10 +28,16 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                 await Firebase.initializeApp(
                   options: DefaultFirebaseOptions.currentPlatform,
                 );
-                User? user = FirebaseAuth.instance.currentUser;
-                await user?.sendEmailVerification();
-                await FirebaseAuth.instance.signOut();
-                await showSuccessDialog(context, 'Sent on mail');
+                try {
+                  User? user = FirebaseAuth.instance.currentUser;
+                  await user?.sendEmailVerification();
+                  await FirebaseAuth.instance.signOut();
+                  await showSuccessDialog(context, 'Sent on mail');
+                } on FirebaseAuthException catch (e) {
+                  showErrorDialog(context, e.code.replaceAll('-', ' '));
+                } catch (e) {
+                  showErrorDialog(context, e.toString());
+                }
               },
               child: const Text("Send verification email")),
           TextButton(

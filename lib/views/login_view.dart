@@ -117,6 +117,8 @@ class _LoginViewState extends State<LoginView> {
                       context, 'Check your mail spam folder to get mail');
                 } on FirebaseAuthException catch (e) {
                   showErrorDialog(context, e.code.replaceAll('-', ' '));
+                } catch (e) {
+                  showErrorDialog(context, e.toString());
                 }
               },
               child: const Text('Forgot Password?')),
