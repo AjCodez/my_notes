@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:my_notes/utilites/routes.dart';
 
 import '../firebase_options.dart';
 
@@ -26,8 +27,15 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                 );
                 User? user = FirebaseAuth.instance.currentUser;
                 await user?.sendEmailVerification();
+                await FirebaseAuth.instance.signOut();
               },
               child: const Text("Send verification email")),
+          TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil(login, (route) => false);
+              },
+              child: const Text("Verified? Go back to login")),
         ],
       ),
     );
