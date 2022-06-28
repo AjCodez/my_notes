@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_notes/utilites/routes.dart';
+import 'package:my_notes/utilites/success_dialog.dart';
 
 import '../firebase_options.dart';
 import '../utilites/error_dialog.dart';
@@ -102,6 +103,23 @@ class _LoginViewState extends State<LoginView> {
             },
             child: const Text("Login"),
           ),
+          TextButton(
+              onPressed: () async {
+                await Firebase.initializeApp(
+                  options: DefaultFirebaseOptions.currentPlatform,
+                );
+                final email = _email.text;
+                try {
+                  await FirebaseAuth.instance.sendPasswordResetEmail(
+                    email: email,
+                  );
+                  showSuccessDialog(
+                      context, 'Check your mail spam folder to get mail');
+                } on FirebaseAuthException catch (e) {
+                  showErrorDialog(context, e.code.replaceAll('-', ' '));
+                }
+              },
+              child: const Text('Forgot Password?')),
           TextButton(
               onPressed: () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
