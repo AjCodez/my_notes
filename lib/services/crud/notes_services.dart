@@ -6,22 +6,51 @@ import 'package:path_provider/path_provider.dart'
 import 'package:path/path.dart' show join;
 
 @immutable
-class DataBaseUser {
+class DatabaseUser {
   final int id;
   final String email;
 
-  const DataBaseUser({
+  const DatabaseUser({
     required this.id,
     required this.email,
   });
 
-  DataBaseUser.fromRow(Map<String, Object?> map)
+  DatabaseUser.fromRow(Map<String, Object?> map)
       : id = map[idColumn] as int,
         email = map[emailColumn] as String;
 
   @override
   String toString() => 'Person, id = $id, email = $email';
+
+  @override
+  operator ==(covariant DatabaseUser other) => id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
+}
+
+class DatabaseNotes {
+  final int id;
+  final int userId;
+  final String text;
+  final bool isSyncedWith;
+
+  DatabaseNotes({
+    required this.id,
+    required this.userId,
+    required this.text,
+    required this.isSyncedWith,
+  });
+
+  DatabaseNotes.fromRow(Map<String, Object?> map)
+      : id = map[idColumn] as int,
+        userId = map[userIdColumn] as int,
+        text = map[textColumn] as String,
+        isSyncedWith = (map[isSyncedWithColumn] as int) == 1 ? true : false;
 }
 
 const idColumn = 'id';
 const emailColumn = 'email';
+const userIdColumn = 'user_id';
+const textColumn = 'text';
+const isSyncedWithColumn = 'is_synced_with_cloud';
