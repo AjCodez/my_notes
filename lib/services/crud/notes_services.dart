@@ -7,6 +7,16 @@ import 'package:path/path.dart' show join;
 class NotesService {
   Database? _db;
 
+  Future<void> close() async {
+    final db = _db;
+    if (db == null) {
+      throw DatabaseIsNotOpenException();
+    } else {
+      await db.close();
+      _db = null;
+    }
+  }
+
   Future<void> open() async {
     if (_db != null) {
       throw DatabaseAlreadyOpenException();
@@ -17,23 +27,7 @@ class NotesService {
       final db = await openDatabase(dbPath);
       _db = db;
 
-      const createUserTable = '''CREATE TABLE IF NOT EXISTS"user" (
-        "id"	INTEGER NOT NULL,
-        "email"	TEXT NOT NULL UNIQUE,
-        PRIMARY KEY("id" AUTOINCREMENT)
-      );
-      ''';
-
       await db.execute(createUserTable);
-
-      const createNotesTable = '''CREATE TABLE IF NOT EXISTS "note" (
-        "id"	INTEGER NOT NULL,
-        "user_id"	INTEGER NOT NULL,
-        "text"	TEXT,
-        "is_synced_with_cloud"	INTEGER NOT NULL DEFAULT 0,
-        PRIMARY KEY("id" AUTOINCREMENT),
-        FOREIGN KEY("user_id") REFERENCES "user"("id")
-      );''';
 
       await db.execute(createNotesTable);
     } on MissingPlatformDirectoryException {
@@ -45,6 +39,8 @@ class NotesService {
 class UnableToGetDocumentsDirectory implements Exception {}
 
 class DatabaseAlreadyOpenException implements Exception {}
+
+class DatabaseIsNotOpenException implements Exception {}
 
 @immutable
 class DatabaseUser {
@@ -96,3 +92,17 @@ const emailColumn = 'email';
 const userIdColumn = 'user_id';
 const textColumn = 'text';
 const isSyncedWithColumn = 'is_synced_with_cloud';
+const createUserTable = '''CREATE TABLE IF NOT EXISTS"user" (
+        "id"	INTEGER NOT NULL,
+        "email"	TEXT NOT NULL UNIQUE,
+        PRIMARY KEY("id" AUTOINCREMENT)
+      );
+      ''';
+const createNotesTable = '''CREATE TABLE IF NOT EXISTS "note" (
+        "id"	INTEGER NOT NULL,
+        "user_id"	INTEGER NOT NULL,
+        "text"	TEXT,
+        "is_synced_with_cloud"	INTEGER NOT NULL DEFAULT 0,
+        PRIMARY KEY("id" AUTOINCREMENT),
+        FOREIGN KEY("user_id") REFERENCES "user"("id")
+      );''';
