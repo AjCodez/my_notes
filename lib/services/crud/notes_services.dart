@@ -7,6 +7,19 @@ import 'package:path/path.dart' show join;
 class NotesService {
   Database? _db;
 
+  Future<void> deleteUser({required String email}) async {
+    final db = _getDatabaseOrThrow();
+    final deletedCount = await db.delete(
+      userTable,
+      where: 'email = ?',
+      whereArgs: [email.toLowerCase()],
+    );
+
+    if (deletedCount != 1) {
+      throw CouldNotDeleteUser();
+    }
+  }
+
   Database _getDatabaseOrThrow() {
     final db = _db;
     if (db == null) {
@@ -50,6 +63,8 @@ class UnableToGetDocumentsDirectory implements Exception {}
 class DatabaseAlreadyOpenException implements Exception {}
 
 class DatabaseIsNotOpenException implements Exception {}
+
+class CouldNotDeleteUser implements Exception {}
 
 @immutable
 class DatabaseUser {
@@ -95,13 +110,15 @@ class DatabaseNotes {
         isSyncedWith = (map[isSyncedWithColumn] as int) == 1 ? true : false;
 }
 
+const noteTable = 'note';
+const userTable = 'user';
 const dbName = 'notes.db';
 const idColumn = 'id';
 const emailColumn = 'email';
 const userIdColumn = 'user_id';
 const textColumn = 'text';
 const isSyncedWithColumn = 'is_synced_with_cloud';
-const createUserTable = '''CREATE TABLE IF NOT EXISTS"user" (
+const createUserTable = '''CREATE TABLE IF NOT EXISTS "user" (
         "id"	INTEGER NOT NULL,
         "email"	TEXT NOT NULL UNIQUE,
         PRIMARY KEY("id" AUTOINCREMENT)
