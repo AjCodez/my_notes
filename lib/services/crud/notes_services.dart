@@ -7,6 +7,21 @@ import 'package:path/path.dart' show join;
 class NotesService {
   Database? _db;
 
+  Future<DatabaseUser> getUser({required String email}) async {
+    final db = _getDatabaseOrThrow();
+    final results = await db.query(
+      userTable,
+      limit: 1,
+      where: 'email = ?',
+      whereArgs: [email.toLowerCase()],
+    );
+    if (results.isEmpty) {
+      throw CouldNotFoundUser();
+    } else {
+      return DatabaseUser.fromRow(results.first);
+    }
+  }
+
   Future<DatabaseUser> createUser({required String email}) async {
     final db = _getDatabaseOrThrow();
     final results = await db.query(
@@ -79,6 +94,8 @@ class NotesService {
     }
   }
 }
+
+class CouldNotFoundUser implements Exception {}
 
 class UserAlreadyExists implements Exception {}
 
