@@ -7,6 +7,28 @@ import 'package:path/path.dart' show join;
 class NotesService {
   Database? _db;
 
+  Future<DatabaseUser> createUser({required String email}) async {
+    final db = _getDatabaseOrThrow();
+    final results = await db.query(
+      userTable,
+      limit: 1,
+      where: 'email = ?',
+      whereArgs: [email.toLowerCase()],
+    );
+    if (results.isNotEmpty) {
+      throw UserAlreadyExists();
+    }
+
+    final userId = await db.insert(userTable, {
+      emailColumn: email.toLowerCase(),
+    });
+
+    return DatabaseUser(
+      id: userId,
+      email: email,
+    );
+  }
+
   Future<void> deleteUser({required String email}) async {
     final db = _getDatabaseOrThrow();
     final deletedCount = await db.delete(
@@ -57,6 +79,8 @@ class NotesService {
     }
   }
 }
+
+class UserAlreadyExists implements Exception {}
 
 class UnableToGetDocumentsDirectory implements Exception {}
 
