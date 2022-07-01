@@ -7,6 +7,15 @@ import 'package:path/path.dart' show join;
 class NotesService {
   Database? _db;
 
+  Future<DatabaseNotes> createNote({required DatabaseUser owner}) async {
+    final db = _getDatabaseOrThrow();
+
+    final dbUser = await getUser(email: owner.email);
+    if (dbUser != owner) {
+      throw CouldNotFoundUser();
+    }
+  }
+
   Future<DatabaseUser> getUser({required String email}) async {
     final db = _getDatabaseOrThrow();
     final results = await db.query(
