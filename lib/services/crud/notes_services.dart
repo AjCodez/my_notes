@@ -7,6 +7,19 @@ import 'package:path/path.dart' show join;
 class NotesService {
   Database? _db;
 
+  Future<void> deleteNote({required String id}) async {
+    final db = _getDatabaseOrThrow();
+    final deletedCount = await db.delete(
+      noteTable,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (deletedCount != 1) {
+      throw CouldNotDeleteNote();
+    }
+  }
+
   Future<DatabaseNotes> createNote({required DatabaseUser owner}) async {
     final db = _getDatabaseOrThrow();
 
@@ -132,6 +145,8 @@ class DatabaseAlreadyOpenException implements Exception {}
 class DatabaseIsNotOpenException implements Exception {}
 
 class CouldNotDeleteUser implements Exception {}
+
+class CouldNotDeleteNote implements Exception {}
 
 @immutable
 class DatabaseUser {
