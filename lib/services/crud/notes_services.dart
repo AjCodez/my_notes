@@ -7,6 +7,25 @@ import 'package:path/path.dart' show join;
 class NotesService {
   Database? _db;
 
+  Future<DatabaseNotes> updateNote({
+    required DatabaseNotes note,
+    required String text,
+  }) async {
+    await getNote(id: note.id);
+
+    final db = _getDatabaseOrThrow();
+    final updateCount = await db.update(noteTable, {
+      textColumn: text,
+      isSyncedWithColumn: 0,
+    });
+
+    if (updateCount == 0) {
+      throw CouldNotUpdateNote();
+    } else {
+      return await getNote(id: note.id);
+    }
+  }
+
   Future<Iterable<DatabaseNotes>> getAllNotes() async {
     final db = _getDatabaseOrThrow();
     final notes = await db.query(noteTable);
@@ -161,22 +180,6 @@ class NotesService {
     }
   }
 }
-
-class CouldNotFoundNote implements Exception {}
-
-class CouldNotFoundUser implements Exception {}
-
-class UserAlreadyExists implements Exception {}
-
-class UnableToGetDocumentsDirectory implements Exception {}
-
-class DatabaseAlreadyOpenException implements Exception {}
-
-class DatabaseIsNotOpenException implements Exception {}
-
-class CouldNotDeleteUser implements Exception {}
-
-class CouldNotDeleteNote implements Exception {}
 
 @immutable
 class DatabaseUser {
