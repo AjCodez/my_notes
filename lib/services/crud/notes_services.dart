@@ -7,7 +7,13 @@ import 'package:path/path.dart' show join;
 class NotesService {
   Database? _db;
 
-  Future<void> deleteNote({required String id}) async {
+  Future<int> deleteAllNote({required int id}) async {
+    final db = _getDatabaseOrThrow();
+    final deletedCount = await db.delete(noteTable);
+    return deletedCount;
+  }
+
+  Future<void> deleteNote({required int id}) async {
     final db = _getDatabaseOrThrow();
     final deletedCount = await db.delete(
       noteTable,
