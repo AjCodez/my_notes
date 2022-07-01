@@ -7,6 +7,28 @@ import 'package:path/path.dart' show join;
 class NotesService {
   Database? _db;
 
+  Future<Iterable<DatabaseNotes>> getAllNotes() async {
+    final db = _getDatabaseOrThrow();
+    final notes = await db.query(noteTable);
+    return notes.map((e) => DatabaseNotes.fromRow(e));
+  }
+
+  Future<DatabaseNotes> getNote({required int id}) async {
+    final db = _getDatabaseOrThrow();
+    final notes = await db.query(
+      noteTable,
+      limit: 1,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (notes.isEmpty) {
+      throw CouldNotFoundNote();
+    } else {
+      return DatabaseNotes.fromRow(notes.first);
+    }
+  }
+
   Future<int> deleteAllNote({required int id}) async {
     final db = _getDatabaseOrThrow();
     final deletedCount = await db.delete(noteTable);
@@ -139,6 +161,8 @@ class NotesService {
     }
   }
 }
+
+class CouldNotFoundNote implements Exception {}
 
 class CouldNotFoundUser implements Exception {}
 
