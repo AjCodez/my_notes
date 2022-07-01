@@ -22,6 +22,18 @@ class NotesService {
     _notesStreamController.add(_notes);
   }
 
+  Future<DatabaseUser> getOrCreateUser({required String email}) async {
+    try {
+      final user = await getUser(email: email);
+      return user;
+    } on CouldNotFoundUser {
+      final createdUser = await createUser(email: email);
+      return createdUser;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<DatabaseNotes> updateNote({
     required DatabaseNotes note,
     required String text,
@@ -37,7 +49,11 @@ class NotesService {
     if (updateCount == 0) {
       throw CouldNotUpdateNote();
     } else {
-      return await getNote(id: note.id);
+      final updatedNote = await getNote(id: note.id);
+      _notes.removeWhere((element) => element.id == updatedNote.id);
+      _notes.add(updatedNote);
+      _notesStreamController.add(_notes);
+      return updatedNote;
     }
   }
 
@@ -59,13 +75,21 @@ class NotesService {
     if (notes.isEmpty) {
       throw CouldNotFoundNote();
     } else {
-      return DatabaseNotes.fromRow(notes.first);
+      final note = DatabaseNotes.fromRow(notes.first);
+      _notes.removeWhere((element) => element.id == id);
+      _notes.add(note);
+      _notesStreamController.add(_notes);
+      return note;
     }
   }
 
   Future<int> deleteAllNote({required int id}) async {
     final db = _getDatabaseOrThrow();
     final deletedCount = await db.delete(noteTable);
+
+    _notes = [];
+    _notesStreamController.add(_notes);
+
     return deletedCount;
   }
 
@@ -79,6 +103,9 @@ class NotesService {
 
     if (deletedCount != 1) {
       throw CouldNotDeleteNote();
+    } else {
+      _notes.removeWhere((element) => element.id == id);
+      _notesStreamController.add(_notes);
     }
   }
 
@@ -104,6 +131,9 @@ class NotesService {
       text: text,
       isSyncedWith: true,
     );
+
+    _notes.add(note);
+    _notesStreamController.add(_notes);
 
     return note;
   }
