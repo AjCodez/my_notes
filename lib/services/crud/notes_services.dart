@@ -14,6 +14,23 @@ class NotesService {
     if (dbUser != owner) {
       throw CouldNotFoundUser();
     }
+
+    const text = '';
+
+    final noteId = await db.insert(noteTable, {
+      userIdColumn: owner.id,
+      textColumn: text,
+      isSyncedWithColumn: 1,
+    });
+
+    final note = DatabaseNotes(
+      id: noteId,
+      userId: owner.id,
+      text: text,
+      isSyncedWith: true,
+    );
+
+    return note;
   }
 
   Future<DatabaseUser> getUser({required String email}) async {
