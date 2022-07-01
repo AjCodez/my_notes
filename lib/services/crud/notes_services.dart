@@ -16,6 +16,8 @@ class NotesService {
   final _notesStreamController =
       StreamController<List<DatabaseNotes>>.broadcast();
 
+  Stream<List<DatabaseNotes>> get allNotes => _notesStreamController.stream;
+
   Future<void> _cacheNotes() async {
     final allNotes = await getAllNotes();
     _notes = allNotes.toList();
