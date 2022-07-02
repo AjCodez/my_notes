@@ -89,6 +89,12 @@ Future<bool> showLogOutDialog(BuildContext context) {
           title: const Text("Log Out"),
           content: const Text("Are you sure you want to log out?"),
           actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(newNoteRoute);
+              },
+              icon: const Icon(Icons.add),
+            ),
             TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(false);
