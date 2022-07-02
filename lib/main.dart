@@ -14,7 +14,7 @@ void main() {
         login: (context) => const LoginView(),
         register: (context) => const RegisterView(),
         home: (context) => const HomePage(),
-        verify_view: (context) => const VerifyEmailView(),
+        verifyView: (context) => const VerifyEmailView(),
       },
     ),
   );

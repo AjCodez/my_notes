@@ -1,4 +1,5 @@
 const login = '/login/';
 const register = '/register/';
 const home = '/home/';
-const verify_view = '/verified_view/';
+const verifyView = '/verified_view/';
+const newNoteRoute = '/new_note_route/';
