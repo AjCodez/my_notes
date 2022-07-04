@@ -37,6 +37,12 @@ class _NotesViewState extends State<NotesView> {
       appBar: AppBar(
         title: const Text("Notes"),
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(newNoteRoute);
+            },
+            icon: const Icon(Icons.add),
+          ),
           PopupMenuButton<MenuAction>(
             itemBuilder: (context) {
               return const [
@@ -66,6 +72,7 @@ class _NotesViewState extends State<NotesView> {
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
+                    case ConnectionState.active:
                       return const Text("lol");
                     default:
                       return const CircularProgressIndicator();

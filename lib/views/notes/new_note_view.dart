@@ -10,8 +10,9 @@ class NewNoteView extends StatefulWidget {
 class _NewNoteViewState extends State<NewNoteView> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Text('Hello from note'),
+    return Scaffold(
+      appBar: AppBar(title: const Text('New Note')),
+      body: const Text('Hello from note'),
     );
   }
 }
