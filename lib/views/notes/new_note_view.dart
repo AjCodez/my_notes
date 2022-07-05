@@ -14,6 +14,13 @@ class _NewNoteViewState extends State<NewNoteView> {
   late final NotesService _notesService;
   late final TextEditingController _textController;
 
+  void _deleteNoteWhenEmpty() {
+    final note = _note;
+    if (_textController.text.isEmpty && note != null) {
+      _notesService.deleteNote(id: note.id);
+    }
+  }
+
   Future<DatabaseNotes> createNote() async {
     final existingNotes = _note;
     if (existingNotes != null) {
