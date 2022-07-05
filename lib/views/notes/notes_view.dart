@@ -26,12 +26,6 @@ class _NotesViewState extends State<NotesView> {
   }
 
   @override
-  void dispose() {
-    _notesService.close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -64,12 +58,12 @@ class _NotesViewState extends State<NotesView> {
       ),
       body: FutureBuilder(
         future: _notesService.getOrCreateUser(email: userEmail),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
+        builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               return StreamBuilder(
                 stream: _notesService.allNotes,
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
                     case ConnectionState.active:
