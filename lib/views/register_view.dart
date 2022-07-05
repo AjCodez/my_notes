@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:my_notes/utilites/error_dialog.dart';
+import 'package:my_notes/utilites/dialoges/error_dialog.dart';
 import 'package:my_notes/utilites/routes.dart';
 
 import '../firebase_options.dart';

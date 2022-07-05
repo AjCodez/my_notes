@@ -5,10 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_notes/utilites/routes.dart';
-import 'package:my_notes/utilites/success_dialog.dart';
+import 'package:my_notes/utilites/dialoges/success_dialog.dart';
 
 import '../firebase_options.dart';
-import '../utilites/error_dialog.dart';
+import '../utilites/dialoges/error_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
