@@ -47,6 +47,23 @@ class _NewNoteViewState extends State<NewNoteView> {
     super.dispose();
   }
 
+  void _textControllerListener() async {
+    final note = _note;
+    if (note == null) {
+      return;
+    }
+    final text = _textController.text;
+    await _notesService.updateNote(
+      note: note,
+      text: text,
+    );
+  }
+
+  void _setupTextControllerListener() async {
+    _textController.removeListener(_textControllerListener);
+    _textController.addListener(_textControllerListener);
+  }
+
   Future<DatabaseNotes> createNote() async {
     final existingNotes = _note;
     if (existingNotes != null) {
