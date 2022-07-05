@@ -73,7 +73,20 @@ class _NotesViewState extends State<NotesView> {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
                     case ConnectionState.active:
-                      return const Text("lol");
+                      if (snapshot.hasData) {
+                        final allNotes = snapshot.data as List<DatabaseNotes>;
+                        return ListView.builder(
+                          itemCount: allNotes.length,
+                          itemBuilder: (context, index) {
+                            final note = allNotes[index];
+                            return ListTile(
+                              title: Text(note.text),
+                            );
+                          },
+                        );
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
                     default:
                       return const CircularProgressIndicator();
                   }
