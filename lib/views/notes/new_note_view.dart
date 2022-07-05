@@ -14,11 +14,30 @@ class _NewNoteViewState extends State<NewNoteView> {
   late final NotesService _notesService;
   late final TextEditingController _textController;
 
-  void _deleteNoteWhenEmpty() {
+  void _deleteNoteWhenEmpty() async {
     final note = _note;
     if (_textController.text.isEmpty && note != null) {
-      _notesService.deleteNote(id: note.id);
+      await _notesService.deleteNote(id: note.id);
     }
+  }
+
+  void _saveNoteWhenNotEmpty() async {
+    final note = _note;
+    final text = _textController.text;
+    if (_textController.text.isNotEmpty && note != null) {
+      await _notesService.updateNote(
+        note: note,
+        text: text,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _deleteNoteWhenEmpty();
+    _saveNoteWhenNotEmpty();
+    _textController.dispose();
+    super.dispose();
   }
 
   Future<DatabaseNotes> createNote() async {
