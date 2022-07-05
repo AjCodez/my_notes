@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../routes.dart';
-
 Future<bool> showLogOutDialog(BuildContext context) {
   return showDialog<bool>(
       context: context,
